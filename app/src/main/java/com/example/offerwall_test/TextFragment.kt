@@ -18,9 +18,9 @@ class TextFragment : Fragment() {
     ): View? {
         return inflater.inflate(R.layout.fragment_text, container, false)
     }
-
-    companion object {
-        @JvmStatic
-        fun newInstance() = TextFragment()
-    }
+//
+//    companion object {
+//        @JvmStatic
+//        fun newInstance() = TextFragment()
+//    }
 }
