@@ -13,6 +13,7 @@ class NoteRepository(private val api : APIService) : BaseRepository() {
         )
         if (itemResponse != null) {
             items.addAll(itemResponse)
+            Log.d("mytag", "getItems: OK $items")
         } else {
             Log.d("mytag", "getItems: null array")
         }
@@ -22,12 +23,13 @@ class NoteRepository(private val api : APIService) : BaseRepository() {
     suspend fun initNote() {
         var result: Showable? = null
         val id = items.get(notes.size).id
-
+        Log.d(TAG, "initNote: Start")
         val note = safeApiCall(
             call = {
                 api.getNote(id).await()
             }, errorMessage = ""
         )
+        Log.d(TAG, "initNote: note load start $note")
         when(note?.type) {
             "text" -> {
                 result = safeApiCall(
@@ -41,19 +43,25 @@ class NoteRepository(private val api : APIService) : BaseRepository() {
             }
             else -> {
                 items.removeAt(notes.size)
-                initNote()
+                if (items.size > notes.size) {
+                    initNote()
+                }
             }
         }
+        Log.d("mytag", "initNote: load finished $result")
         if (result != null && !notes.contains(result)) {
             notes.add(result)
         }
+
+        Log.d(TAG, "initNote: notes: $notes")
     }
 
     suspend fun getNote(): Showable {
         if (items.size > notes.size) {
             initNote()
         }
-        var result = notes.get(if (i < notes.size) i++ else {i = 0; i})
+        Log.d("mytags", "getNote: $notes")
+        var result = notes.get(if (i < notes.size) i++ else {i = 0; i++})
         return result
     }
 }

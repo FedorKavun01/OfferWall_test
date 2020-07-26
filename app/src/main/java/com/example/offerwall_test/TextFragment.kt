@@ -9,9 +9,6 @@ import android.widget.TextView
 
 class TextFragment(val textNote: TextNote) : Fragment() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -22,9 +19,4 @@ class TextFragment(val textNote: TextNote) : Fragment() {
         tv.setText(textNote.getData())
         return view
     }
-//
-//    companion object {
-//        @JvmStatic
-//        fun newInstance() = TextFragment()
-//    }
 }

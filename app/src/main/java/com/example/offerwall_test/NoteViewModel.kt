@@ -16,32 +16,31 @@ class NoteViewModel : ViewModel() {
     private val repository : NoteRepository = NoteRepository(NetworkService.getService())
 
     fun fetchItems() {
-        scope.launch{
-            async { repository.getItems() }.await()
+        runBlocking {
+            repository.getItems()
         }
     }
 
-    fun getStarted(): Unit {
-        scope.launch {
-            async {
+    fun getStarted() {
+        runBlocking {
+            scope.async {
                 fetchItems()
-                repository.initNote() }.await()
+                repository.initNote()
+            }.await()
         }
     }
 
-    fun fetchFragment(): Fragment {
+    suspend fun fetchFragment(): Fragment {
         var note: Showable? = null
         var fragment: Fragment? = null
-        scope.launch {
-            runBlocking { note = repository.getNote()
-                when(note) {
-                    is WebNote -> {
-                        fragment = WebFragment(note as WebNote)
-                    }
-                    is TextNote -> {
-                        fragment =  TextFragment(note as TextNote)
-                    }
-                }}
+        note = repository.getNote()
+        when(note) {
+            is WebNote -> {
+                fragment = WebFragment(note as WebNote)
+            }
+            is TextNote -> {
+                fragment =  TextFragment(note as TextNote)
+            }
         }
 
         return fragment!!
